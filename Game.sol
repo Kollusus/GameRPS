@@ -30,6 +30,7 @@ contract Game {
     mapping(address => bool) public player_inGame;
     uint public playing_count;
     bool authorized_ending;
+    count_input;
 
     address[] List_Player; 
     
@@ -88,7 +89,8 @@ contract Game {
         }
 
         playing_count++;
-        
+        count_input++;
+
         if(playing_count == 2) {
             timeUnit.resetStartTime();
         }
@@ -103,7 +105,7 @@ contract Game {
 
     function ForcedEndGame() public {
         require(timeUnit.elapsedSeconds() > 360, "Waiting for 5 minute to Forced End");
-        require(num_player == 1, "Can't do that");
+        require(count_input == 1, "Can't do that");
         require(authorized_ending, "Can't do that");
         game.player1 == msg.sender ? game.player1.transfer(reward) : game.player2.transfer(reward);
         resetGame(); 
@@ -148,11 +150,11 @@ contract Game {
     }
     
     function determineOutcomeSL() internal {
-        if(game.player1_choice == game.player2_choice) {
+        if(game.player1_choice == game.player2_choice){
             game.player1.transfer(reward/2);
             game.player2.transfer(reward/2);
         }
-        else if((game.player1_choice+1) % 3 == game.player2_choice) {
+        else if((game.player1_choice+1) % 5 == game.player2_choice || (game.player1_choice+1) % 5 == game.player2_choice-1 ) {
             game.player2.transfer(reward);
         }
         else{
