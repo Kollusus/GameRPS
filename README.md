@@ -48,6 +48,8 @@
   2.ผู้เล่นต้องมากกว่า 0 คน (อย่างน้อย 1 คน) ไม่งั้นจะใส่ค่ามาไม่ได้ครับ
 ซึ่งการทำงานของฟังก์ชันจะทำการเช็คว่าเป็นผู้เล่นคนไหนจากเงื่อนไข if และจะทำการเซ็ตคนตอบนั้นไว้พร้อมกับบล็อคครับ
 (ในส่วนของ authorized_ending อันนี้เอาไว้สำหรับการ Force Endgame ครับ หากคนใดใส่คำตอบมาจะมีสิทธินี้ และสามารถกด Force Endgame ได้ หากครบระยะเวลาครับ)
+   ```markdown
+   ```solidity
     function inputPlayer(bytes32 _input) public {
         require(player_inGame[msg.sender], "You are not in this round!");
         require(game.player1 != address(0) && game.player2 != address(0), "Not enough players!");
@@ -70,14 +72,20 @@
             timeUnit.resetStartTime();
         }
     }
+   ```
 ต่อมาจะเป็นฟังก์ชันรองรับการ refund ของผู้เล่น (ในกรณีที่กด AddPlayer เพียงอย่างเดียวครับ) เพราะหากไม่มีคนเข้ามาเล่นด้วย ก็จะสามารถ refund กลับไปได้ครับ และจะใช้ได้เพียงกรณีเดียวก็คือ มีผู้เล่นเข้ามาเล่นเพียง 1 คนครับ
+   ```markdown
+   ```solidity
     function refund() public payable {
         require(num_player == 1,"Can't refund");
         require(timeUnit.elapsedSeconds() > 360, "Waiting for 5 minute to refund!");
         game.player1.transfer(reward);
         resetGame();
     }
+   ```
 ต่อมาจะเป็นฟังก์ชันรองรับการจบเกมสำหรับคนที่การ input เข้ามา แต่อีกคนไม่ยอม input ด้วย ทำให้ไม่สามารถเล่นต่อได้ โดยจะมี authorized_ending ที่ทำการให้สิทธิตั้งแต่ทำการ input เข้ามาครับ โดยทั้งคู่ หากใครกด input เข้ามาจะมีสิทธิครับ และได้เงินคืนตามระยะเวลาครับ
+   ```markdown
+   ```solidity
     function ForcedEndGame() public {
         require(timeUnit.elapsedSeconds() > 360, "Waiting for 5 minute to Forced End");
         require(num_player == 1, "Can't do that");
@@ -85,6 +93,7 @@
         game.player1 == msg.sender ? game.player1.transfer(reward) : game.player2.transfer(reward);
         resetGame(); 
     }
+   ```
 ต่อมาจะเป็นฟังก์ชันการ reveal ตัวเลือกของผู้เล่นครับ โดยจะทำการเช็คว่าเป็นผู้เล่นคนใดที่ทำการ Reveal เข้ามาผ่านเงื่อนไข if ครับ
 : ซึ่งโดยเงื่อนไขทั้งสองนั้นจะมีเงื่อนไขหลักๆอยู่ดังนี้ครับ
   1.ต้องทำการ commit มาก่อนเท่านั้น
