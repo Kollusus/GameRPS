@@ -270,8 +270,8 @@ Ans.
     ```markdown
     ```solidity
     require(uint64(block.number)<game.player1_block+250,"CommitReveal::reveal: Revealed too late");
-อธิบายโค้ดส่วนทำการ reveal และนำ choice มาตัดสินผู้ชนะ
     ```
+อธิบายโค้ดส่วนทำการ reveal และนำ choice มาตัดสินผู้ชนะ
 Ans. 
     ใช้การแปลงจากค่า reveal โดยการดึง bit 2 ตัวสุดท้าย แปลงเป็น int ครับ
     ```markdown
